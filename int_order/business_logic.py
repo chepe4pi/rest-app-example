@@ -1,3 +1,5 @@
+import random
+
 from django.db.transaction import atomic
 
 from int_order.models import Order
@@ -15,3 +17,12 @@ def set_scores(order_id, serializer, user):
     user_info.score += scores
     user_info.save()
     serializer.save()
+
+
+# TODO this part exists just for creation test data by request
+def create_test_orders(user):
+    orders_count = Order.objects.filter(complete=False).count()
+    if orders_count < 10:
+        count_to_create = 10 - orders_count
+        for i in range(count_to_create):
+            Order.objects.create(cost=100 - random.randint(0, 50), owner=user)
